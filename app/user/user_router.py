@@ -41,4 +41,3 @@ def update_user_password(user_update: UserUpdate, service: UserService = Depends
         return BaseResponse(status="success", data=updated_user, message="User password update success.")
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
-
