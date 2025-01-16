@@ -1,0 +1,17 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.so
+
+# Virtual environment
+venv/
+env/
+
+# IDE 설정 파일
+.idea/
+.vscode/
+
+# 환경 변수 및 설정 파일
+.env
+*.env
+config.json
