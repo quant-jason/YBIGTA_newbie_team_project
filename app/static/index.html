@@ -9,6 +9,7 @@
             font-family: Arial, sans-serif;
             margin: 20px;
             text-align: center;
+            background-color: rgb(8, 1, 61);
         }
         .container {
             max-width: 600px;
@@ -17,9 +18,16 @@
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: aliceblue;
         }
         h1 {
             color: #333;
+            text-transform: uppercase;
+            ;
+        }
+        h2 {
+            color: rgb(15, 2, 70);
+            font-size: 22px;
         }
         form {
             margin: 20px 0;
@@ -29,12 +37,16 @@
             margin: 5px 0;
             width: 80%;
             font-size: 16px;
+            
         }
         button {
             padding: 10px 20px;
             margin: 10px;
             font-size: 16px;
             cursor: pointer;
+            background-color: rgb(10, 2, 82);
+            color:azure;
+            font-style: bold;
         }
         .section {
             margin-bottom: 30px;
@@ -45,7 +57,7 @@
     <div class="container" id="login-screen">
         <h1>User Management</h1>
         <div class="section" id="login-section">
-            <h2>Login</h2>
+            <h2>[  Login  ]</h2>
             <form id="login-form">
                 <input type="email" id="login-email" placeholder="Email" required><br>
                 <input type="password" id="login-password" placeholder="Password" required><br>
@@ -53,7 +65,7 @@
             </form>
         </div>
         <div class="section" id="register-section">
-            <h2>Register</h2>
+            <h2>[  Register  ]</h2>
             <form id="register-form">
                 <input type="email" id="register-email" placeholder="Email" required><br>
                 <input type="password" id="register-password" placeholder="Password" required><br>
