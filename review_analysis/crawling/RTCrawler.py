@@ -9,6 +9,7 @@ import pandas as pd
 
 import re
 import os
+import sys
 
 from bs4 import BeautifulSoup
 from utils.logger import setup_logger
@@ -23,6 +24,8 @@ class RTCrawler(BaseCrawler):
         self.chrome_options.add_experimental_option("excludeSwitches", ["enable-logging"])
         self.driver = webdriver.Chrome(options=self.chrome_options)
         self.data: list = [[], [], []]
+        self.logger = setup_logger()
+        self.logger.info("RTC크롤러 로그 정상작동")
 
     def start_browser(self):
         self.driver.get(self.base_url)
@@ -33,11 +36,15 @@ class RTCrawler(BaseCrawler):
             pass
 
     def scrape_reviews(self):
+        if not os.path.exists(self.dir):
+            print(f"Error: The directory '{self.dir}' does not exist. Please create it before running the program.")
+            sys.exit(1)  
+
         self.start_browser()
         wait = WebDriverWait(self.driver, 10)
         
-        # "Load More" 버튼을 최대 60번 클릭하여 리뷰를 로드
-        for _ in range(60):
+        # "Load More" 버튼을 최대 60번 클릭하여 리뷰를 로드 (직접 세어본 결과 한 번에 약 20개 로드드)
+        for i in range(60):
             try:
                 # 버튼이 클릭 가능할 때까지 기다림
                 load_more_button = wait.until(
@@ -47,7 +54,8 @@ class RTCrawler(BaseCrawler):
                 self.driver.execute_script("arguments[0].scrollIntoView(true);", load_more_button)
                 # 버튼 클릭
                 load_more_button.click()
-                time.sleep(1)  # 버튼 클릭 후 로딩 대기
+                time.sleep(1)  
+                print(f"{i+1}번째 버튼 클릭 성공")
             except Exception as e:
                 print("No more reviews to load or error occurred:", e)
                 break
@@ -74,7 +82,7 @@ class RTCrawler(BaseCrawler):
                 review_container = row.find('p', class_='audience-reviews__review')
                 review_text = review_container.get_text(strip=True) if review_container else ''
 
-                # 영어 판단: 알파벳 비율 >= 70%
+                # 영어 판단: 알파벳 비율 >= 30% (특수기호를 쓰는사람이 많아 30으로 설정했음음)
                 if not self.is_english(review_text):
                     print(f"Non-English review skipped: {review_text}")
                     continue
@@ -109,10 +117,10 @@ class RTCrawler(BaseCrawler):
     def is_english(self, text):
         """
         텍스트가 영어인지 확인하는 간단한 규칙:
-        알파벳 문자 비율이 전체 문자 중 70% 이상이면 영어로 간주.
+        알파벳 문자 비율이 전체 문자 중 30% 이상이면 영어로 간주.
         """
         letters = re.findall(r'[a-zA-Z]', text)
         non_space_chars = re.sub(r'\s', '', text)
-        if non_space_chars and (len(letters) / len(non_space_chars)) >= 0.7:
+        if non_space_chars and (len(letters) / len(non_space_chars)) >= 0.3:
             return True
         return False
