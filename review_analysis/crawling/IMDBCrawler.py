@@ -1,4 +1,5 @@
 from review_analysis.crawling.base_crawler import BaseCrawler
+from utils.logger import setup_logger
 
 from bs4 import BeautifulSoup
 from selenium import webdriver
@@ -18,7 +19,9 @@ class IMDBCrawler(BaseCrawler):
         self.chrome_options.add_experimental_option("detach", True)
         self.chrome_options.add_experimental_option("excludeSwitches",["enable-logging"])
         self.driver = webdriver.Chrome(options=self.chrome_options)
-                
+        self.logger = setup_logger()
+        self.logger.info("IDMB크롤러 로그 정상작동")
+
     def start_browser(self):
         self.driver.get(self.base_url)
         self.driver.implicitly_wait(2)
