@@ -1,4 +1,4 @@
-from base_processor import BaseDataProcessor
+from review_analysis.preprocessing.base_processor import BaseDataProcessor
 
 import pandas as pd
 import os
