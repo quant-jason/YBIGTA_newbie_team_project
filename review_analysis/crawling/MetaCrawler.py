@@ -13,6 +13,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 import pandas as pd
 
+from typing import Optional
 import time
 import re
 import os
@@ -44,118 +45,90 @@ class MetaCrawler(BaseCrawler):
             pass
 
     def scrape_reviews(self):
-        self.start_browser() 
+        self.start_browser()
         wait = WebDriverWait(self.driver, 10)
 
-        # scroll만 하면 새로 loading되는 구조
-        interval = 2 # 1초에 한 번 스크롤
+        interval = 1
         prev_height = self.driver.execute_script("return document.body.scrollHeight")
 
         columns = ['date', 'review', 'score']
         meta_data = {col: [] for col in columns}
 
-        # 초기 로드된 데이터 개수
-        prev_data_count = 0
-
         while True:
-            # scrolling work
             self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
 
-            # new review_load
             try:
                 review_load = wait.until(
-                    EC.presence_of_element_located((By.CSS_SELECTOR, "div.c-pageProductReviews_row.g-outer-spacing-bottom-xxlarge"))
+                    EC.presence_of_element_located((By.CSS_SELECTOR, "div.c-pageProductReviews_row"))
                 )
             except TimeoutException:
-                print("No new reviews loaded after scrolling.")
+                print("Can't find newly loading reviews.")
                 break
 
-            # 현재 로드된 데이터 개수
-            curr_data_count = len(
-                self.driver.find_elements(By.CSS_SELECTOR, "div.c-pageProductReviews_row.g-outer-spacing-bottom-xxlarge > div")
-            )    
-
-            # 새로운 데이터가 로드되지 않았을 경우 종료
-            if curr_data_count == prev_data_count:
-                print("No more new reviews loaded.")
+            time.sleep(interval)
+            curr_height = self.driver.execute_script("return document.body.scrollHeight")
+            if sum(len(meta_data[col]) for col in meta_data.keys()) >= 1000:
+                df = pd.DataFrame(meta_data)
+                self.data = df
+                print("Crawling over 1000 done:", df)
                 break
 
-            # 업데이트된 데이터 개수 기록   
-            prev_data_count = curr_data_count
-            print(f"Loaded {curr_data_count} reviews so far.")
-                    
-            # # 대기 후 페이지 소스 bring
-            # time.sleep(interval)
-            # # 현재 문서 높이를 가져와서 저장
-            # curr_height = self.driver.execute_script("return document.body.scrollHeight")
-            # if sum(len(meta_data[col]) for col in meta_data.keys()) >= 1000:
-            #     df = pd.DataFrame(meta_data)
-            #     self.data = df
-            #     print("crawling over 1000 done:", df)
-            #     # self.save_to_database()
-            #     break
+            if curr_height == prev_height:
+                print("No more contents available.")
+                break
 
-            # if curr_height == prev_height:
-            #     print("no more contents available.")
-            #     break
-
-            # prev_height = curr_height 
+            prev_height = curr_height
 
         soup = BeautifulSoup(self.driver.page_source, 'html.parser')
-        data_rows = soup.select("div.c-pageProductReviews_row.g-outer-spacing-bottom-xxlarge > div")
-
-        for row in data_rows[prev_data_count:]:
+        # data_rows = soup.find_all('div', attrs={'class': 'c-pageProductReviews_row'})
+        data_rows = soup.select('div.c-pageProductReviews_row.g-outer-spacing-bottom-xxlarge')
+        
+        for row in data_rows:
             date = 'N/A'
             date_div = row.find('div', attrs={'class': 'c-siteReviewHeader_reviewDate g-color-gray80 u-text-uppercase'})
             if date_div:
                 date = date_div.get_text().strip()
- 
+                print("date:", date)
+
             review = 'N/A'
-            review_div = row.find('div', attrs={'class': 'c-siteReview_quote g-outer-spacing-bottom-medium'})
-            
+            # c-siteReview_quote g-outer-spacing-bottom-small
+            # c-siteReview_quote g-outer-spacing-bottom-medium
+            review_div = row.select_one('div > div > div > div > div > span')
+            # review_div = row.find('div', attrs={'class': 'c-siteReview_quote g-outer-spacing-bottom-medium'})
+            # if review_div:
+            #     review_span = review_div.find('span')
+            #     if review_span:
+            #       review = review_span.get_text().strip()
+            #       print("review:", review)
             if review_div:
-                review_span = review_div.find('span')
-                if review_span:
-                    review = review_span.get_text().strip()
-                
+                review = review_div.get_text(strip=True)
+                print("Review:", review)
+            else:
+                print("Review not found")
+
             score = 'N/A'
             score_div = row.find('div', attrs={'class': 'c-siteReviewScore_background c-siteReviewScore_background-user'})
-            
             if score_div:
-                score_title = score_div.get('title')
-                if score_title:
-                    extract = re.search(r'User score (\d+) out of 10', score_title)
-                    if extract:
-                        score = extract.group(1)
-
-            self.logger.info(f"meta_data size: {len(meta_data['date'])}")
+                # score_div 내부의 하위 div를 다시 탐색
+                inner_div = score_div.find('div', attrs={'title': True})
+                if inner_div:
+                    score_title = inner_div.get('title')  # 실제 title 속성을 가져옴
+                    if score_title:
+                        extract = re.search(r'User score (\d+) out of 10', score_title)
+                        if extract:
+                            score = extract.group(1)
+                            print("score:", score)
 
             if (date, review, score) not in zip(meta_data['date'], meta_data['review'], meta_data['score']):
                 meta_data['date'].append(date)
                 meta_data['review'].append(review)
                 meta_data['score'].append(score)
 
-                # logging debug
-                current_index = len(meta_data['date']) - 1
-                self.logger.info(f"crawling success: {current_index}")
+                # current_index = len(meta_data['date']) - 1
+                # self.logger.info(f"Crawling success: {current_index}")
+                self.logger.info(f"Added data: {date}, {review[:30]}, {score}")
             else:
-                print('data already exists')
-            
-        # if all(len(meta_data[col]) > 0 for col in columns):
-        #     df = pd.DataFrame(meta_data)
-        #     self.data = df
-        #     print("crawling done:", df)
-        # else:
-        #     print("no data collected")   
-
-        # DataFrame으로 변환
-        df = pd.DataFrame(meta_data)
-        if not df.empty:
-            self.data = df
-            print("Crawling completed. DataFrame created.")
-            self.save_to_database()
-        else:
-            print("No valid data collected.")
+                print("Data already exists.")
 
     
     def save_to_database(self):
