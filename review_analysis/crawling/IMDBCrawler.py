@@ -97,7 +97,7 @@ class IMDBCrawler(BaseCrawler):
 
         
     def save_to_database(self):
-        file_name = "reviews_IDMB.csv"
+        file_name = "reviews_IMDB.csv"
         file_path = os.path.join(self.output_dir, file_name)
         if isinstance(self.data, pd.DataFrame):
             self.data.to_csv(file_path, index=False, encoding='utf-8-sig')

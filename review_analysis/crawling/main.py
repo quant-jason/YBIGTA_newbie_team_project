@@ -4,11 +4,13 @@ from review_analysis.crawling.base_crawler import BaseCrawler
 from review_analysis.crawling.example_crawler import ExampleCrawler
 from review_analysis.crawling.RTCrawler import RTCrawler
 from review_analysis.crawling.IMDBCrawler import IMDBCrawler
+from review_analysis.crawling.MetaCrawler import MetaCrawler
 
 # 모든 크롤링 클래스를 예시 형식으로 적어주세요. 
 CRAWLER_CLASSES: Dict[str, Type[BaseCrawler]] = {
     "RT": RTCrawler,
-    "IMDB": IMDBCrawler
+    "IMDB": IMDBCrawler,
+    "Meta": MetaCrawler,
 }
 
 def create_parser() -> ArgumentParser:
