@@ -5,6 +5,7 @@ from typing import Dict, Type
 from review_analysis.preprocessing.base_processor import BaseDataProcessor
 from review_analysis.preprocessing.RTCProcessor import RTCProcessor
 from review_analysis.preprocessing.IMDB_processor import IMDB_processor
+from review_analysis.preprocessing.Meta_processor import MetaProcessor
 
 
 # 모든 preprocessing 클래스를 예시 형식으로 적어주세요. 
@@ -12,10 +13,12 @@ from review_analysis.preprocessing.IMDB_processor import IMDB_processor
 PREPROCESS_CLASSES: Dict[str, Type[BaseDataProcessor]] = {
     "reviews_rotten_tomatoes": RTCProcessor,
     "reviews_IMDB.csv": IMDB_processor,
+    "reviews_metacritic": MetaProcessor,
     # key는 크롤링한 csv파일 이름으로 적어주세요! ex. reviews_naver.csv -> reviews_naver
 }
 
 REVIEW_COLLECTIONS = glob.glob(os.path.join("..","..","database", "reviews_*.csv"))
+
 
 def create_parser() -> ArgumentParser:
     parser = ArgumentParser()

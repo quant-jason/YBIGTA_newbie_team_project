@@ -169,3 +169,5 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+review_analysis/.DS_Store
+review_analysis/crawling/.DS_Store

@@ -1,7 +1,6 @@
 from argparse import ArgumentParser
 from typing import Dict, Type
 from review_analysis.crawling.base_crawler import BaseCrawler
-from review_analysis.crawling.example_crawler import ExampleCrawler
 from review_analysis.crawling.RTCrawler import RTCrawler
 from review_analysis.crawling.IMDBCrawler import IMDBCrawler
 from review_analysis.crawling.MetaCrawler import MetaCrawler
