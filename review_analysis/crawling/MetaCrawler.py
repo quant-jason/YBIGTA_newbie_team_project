@@ -95,7 +95,6 @@ class MetaCrawler(BaseCrawler):
             date_div = row.find('div', attrs={'class': 'c-siteReviewHeader_reviewDate g-color-gray80 u-text-uppercase'})
             if date_div:
                 date = date_div.get_text().strip()
-                print("date:", date)
 
             review = 'N/A'
             # c-siteReview_quote g-outer-spacing-bottom-small
@@ -109,6 +108,10 @@ class MetaCrawler(BaseCrawler):
             #       print("review:", review)
             if review_div:
                 review = review_div.get_text(strip=True)
+
+                if "[SPOILER ALERT:" in review:
+                    print("Skipped review due to spoler alert:")
+                    continue
             else:
                 print("Review not found")
 
