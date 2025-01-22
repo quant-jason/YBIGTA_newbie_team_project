@@ -48,7 +48,7 @@ class MetaCrawler(BaseCrawler):
         self.start_browser()
         wait = WebDriverWait(self.driver, 10)
 
-        interval = 1
+        interval = 2 # scroll 대기시간 증가
         prev_height = self.driver.execute_script("return document.body.scrollHeight")
 
         columns = ['date', 'review', 'score']
@@ -56,7 +56,8 @@ class MetaCrawler(BaseCrawler):
 
         while True:
             self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
-
+            time.sleep(interval)  # 대기 시간 증가
+            
             try:
                 review_load = wait.until(
                     EC.presence_of_element_located((By.CSS_SELECTOR, "div.c-pageProductReviews_row"))
@@ -68,8 +69,8 @@ class MetaCrawler(BaseCrawler):
             time.sleep(interval)
             curr_height = self.driver.execute_script("return document.body.scrollHeight")
             if sum(len(meta_data[col]) for col in meta_data.keys()) >= 1000:
-                df = pd.DataFrame(meta_data)
-                self.data = df
+                # df = pd.DataFrame(meta_data)
+                # self.data = df
                 print("Crawling over 1000 done:", df)
                 break
 
@@ -77,13 +78,19 @@ class MetaCrawler(BaseCrawler):
                 print("No more contents available.")
                 break
 
+            # 지우기 
+            print(f"Scroll progress - prev_height: {prev_height}, curr_height: {curr_height}")
             prev_height = curr_height
 
         soup = BeautifulSoup(self.driver.page_source, 'html.parser')
         # data_rows = soup.find_all('div', attrs={'class': 'c-pageProductReviews_row'})
-        data_rows = soup.select('div.c-pageProductReviews_row.g-outer-spacing-bottom-xxlarge')
-        
+        # data_rows = soup.select('div.c-pageProductReviews_row.g-outer-spacing-bottom-xxlarge')
+        data_rows = soup.select('div[data-testid="product-review"]')
+        print(f"Total review containers found: {len(data_rows)}") # data_rows에 포함된 div의 개수. 지우기
+
         for row in data_rows:
+            # print("Current row:", row)  # 현재 row 정보, 지우기 
+
             date = 'N/A'
             date_div = row.find('div', attrs={'class': 'c-siteReviewHeader_reviewDate g-color-gray80 u-text-uppercase'})
             if date_div:
@@ -102,7 +109,6 @@ class MetaCrawler(BaseCrawler):
             #       print("review:", review)
             if review_div:
                 review = review_div.get_text(strip=True)
-                print("Review:", review)
             else:
                 print("Review not found")
 
@@ -117,16 +123,23 @@ class MetaCrawler(BaseCrawler):
                         extract = re.search(r'User score (\d+) out of 10', score_title)
                         if extract:
                             score = extract.group(1)
-                            print("score:", score)
 
-            if (date, review, score) not in zip(meta_data['date'], meta_data['review'], meta_data['score']):
+            if date not in meta_data['date'] or review not in meta_data['review'] or score not in meta_data['score']:
                 meta_data['date'].append(date)
                 meta_data['review'].append(review)
                 meta_data['score'].append(score)
 
                 # current_index = len(meta_data['date']) - 1
                 # self.logger.info(f"Crawling success: {current_index}")
-                self.logger.info(f"Added data: {date}, {review[:30]}, {score}")
+                # print(meta_data)  # 크롤링 과정에서 데이터 확인  ## 지우기
+                
+                
+                # **여기서 `self.data` 업데이트**
+                self.data = pd.DataFrame(meta_data)
+                print(f"Added data: {date}, {review[:10]}, {score}")
+
+                for col in meta_data.keys(): ## 지우기
+                    print(f"{col}: {len(meta_data[col])} entries") 
             else:
                 print("Data already exists.")
 
