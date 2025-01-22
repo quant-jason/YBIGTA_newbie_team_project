@@ -8,8 +8,8 @@ from review_analysis.crawling.MetaCrawler import MetaCrawler
 
 # 모든 크롤링 클래스를 예시 형식으로 적어주세요. 
 CRAWLER_CLASSES: Dict[str, Type[BaseCrawler]] = {
-    # "RT": RTCrawler,
-    # "IMDB": IMDBCrawler,
+    "RT": RTCrawler,
+    "IMDB": IMDBCrawler,
     "Meta": MetaCrawler,
 }
 
