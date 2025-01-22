@@ -17,6 +17,12 @@ import time
 
 class RTCrawler(BaseCrawler):
     def __init__(self, output_dir: str):
+        """
+        RTCrawler 클래스 초기화 메서드.
+
+        Args:
+            output_dir (str): 크롤링한 데이터를 저장할 디렉터리 경로.
+        """
         super().__init__(output_dir)
         self.base_url = 'https://www.rottentomatoes.com/m/marvels_the_avengers/reviews?type=user'
         self.dir = output_dir
@@ -28,6 +34,15 @@ class RTCrawler(BaseCrawler):
         self.logger.info("RTC크롤러 로그 정상작동")
 
     def start_browser(self):
+        """
+        웹 브라우저를 시작하고 초기 URL로 이동.
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.driver.get(self.base_url)
         self.driver.implicitly_wait(2)
         try:
@@ -36,6 +51,15 @@ class RTCrawler(BaseCrawler):
             pass
 
     def scrape_reviews(self):
+        """
+        Rotten Tomatoes 웹사이트에서 사용자 리뷰를 크롤링하여 데이터로 저장.
+
+        Args:
+            None
+
+        Returns:
+            None: 수집된 리뷰 데이터는 self.data 리스트에 저장되며, 이후 DataFrame으로 변환.
+        """
         if not os.path.exists(self.dir):
             print(f"Error: The directory '{self.dir}' does not exist. Please create it before running the program.")
             sys.exit(1)  
@@ -43,16 +67,12 @@ class RTCrawler(BaseCrawler):
         self.start_browser()
         wait = WebDriverWait(self.driver, 10)
         
-        # "Load More" 버튼을 최대 60번 클릭하여 리뷰를 로드 (직접 세어본 결과 한 번에 약 20개 로드드)
         for i in range(60):
             try:
-                # 버튼이 클릭 가능할 때까지 기다림
                 load_more_button = wait.until(
                     EC.element_to_be_clickable((By.CSS_SELECTOR, "rt-button[data-qa='load-more-btn']"))
                 )
-                # 버튼이 화면에 보이도록 스크롤
                 self.driver.execute_script("arguments[0].scrollIntoView(true);", load_more_button)
-                # 버튼 클릭
                 load_more_button.click()
                 time.sleep(1)  
                 print(f"{i+1}번째 버튼 클릭 성공")
@@ -60,13 +80,11 @@ class RTCrawler(BaseCrawler):
                 print("No more reviews to load or error occurred:", e)
                 break
 
-        # 리뷰 데이터 추출
         soup = BeautifulSoup(self.driver.page_source, 'html.parser')
         review_rows = soup.find_all('div', class_='audience-review-row')
 
         for row in review_rows:
             try:
-                # 별점 추출
                 meta = row.find('div', class_='audience-review-meta')
                 if meta:
                     score_tag = meta.find('rating-stars-group')
@@ -74,20 +92,16 @@ class RTCrawler(BaseCrawler):
                 else:
                     score_ = 'N/A'
 
-                # 날짜 추출
                 date_tag = row.find('span', class_='audience-reviews__duration')
                 date_ = date_tag.get_text(strip=True) if date_tag else 'N/A'
 
-                # 리뷰 텍스트 추출
                 review_container = row.find('p', class_='audience-reviews__review')
                 review_text = review_container.get_text(strip=True) if review_container else ''
 
-                # 영어 판단: 알파벳 비율 >= 30% (특수기호를 쓰는사람이 많아 30으로 설정했음음)
                 if not self.is_english(review_text):
                     print(f"Non-English review skipped: {review_text}")
                     continue
 
-                # 데이터 저장
                 self.data[0].append(date_)
                 self.data[1].append(review_text)
                 self.data[2].append(score_)
@@ -95,7 +109,6 @@ class RTCrawler(BaseCrawler):
                 print(f"Error processing review: {e}")
                 continue
 
-        # 데이터프레임 생성
         if any(self.data[0]) and any(self.data[1]) and any(self.data[2]):
             self.data = pd.DataFrame({
                 "date": self.data[0],
@@ -106,6 +119,15 @@ class RTCrawler(BaseCrawler):
             print("No data collected.")
 
     def save_to_database(self):
+        """
+        수집된 데이터를 CSV 파일로 저장.
+
+        Args:
+            None
+
+        Returns:
+            None: 저장 경로는 self.dir 경로의 `reviews_rotten_tomatoes.csv`.
+        """
         file_name = "reviews_rotten_tomatoes.csv"
         file_path = os.path.join(self.dir, file_name)
         if isinstance(self.data, pd.DataFrame):
@@ -116,8 +138,13 @@ class RTCrawler(BaseCrawler):
 
     def is_english(self, text):
         """
-        텍스트가 영어인지 확인하는 간단한 규칙:
-        알파벳 문자 비율이 전체 문자 중 30% 이상이면 영어로 간주.
+        텍스트가 영어인지 확인.
+
+        Args:
+            text (str): 영어 여부를 확인할 텍스트.
+
+        Returns:
+            bool: 텍스트가 영어일 경우 True, 아닐 경우 False.
         """
         letters = re.findall(r'[a-zA-Z]', text)
         non_space_chars = re.sub(r'\s', '', text)
