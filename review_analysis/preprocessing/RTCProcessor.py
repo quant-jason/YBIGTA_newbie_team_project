@@ -37,6 +37,7 @@ class RTCProcessor(BaseDataProcessor):
             ', '.join(f"{word}:{tfidf:.2f}" for word, tfidf in zip(tfidf_feature_names, row) if tfidf > 0)
             for row in tfidf_matrix.toarray()
         ]
+        self.df = self.df[self.df['tfidf_features'] != '']
 
     def save_to_database(self):
         file_name = "preprocessed_reviews_RTC.csv"

@@ -73,6 +73,7 @@ class MetaProcessor(BaseDataProcessor):
             ', '.join(f"{word}:{tfidf:.2f}" for word, tfidf in zip(tfidf_feature_names, row) if tfidf > 0)
             for row in tfidf_matrix.toarray()
         ]
+        self.df_cleaned = self.df_cleaned[self.df_cleaned['tfidf_features'] != '']
         print("feature over") # 지우기
 
     def save_to_database(self):
