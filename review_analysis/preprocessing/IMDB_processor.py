@@ -1,4 +1,4 @@
-from review_analysis.preprocessing.base_processor import BaseDataProcessor
+from base_processor import BaseDataProcessor
 
 import pandas as pd
 import os
@@ -29,9 +29,8 @@ class IMDB_processor(BaseDataProcessor):
 
     def feature_engineering(self):
         # 날짜 파생 변수 추출
-        self.df_cleaned['year'] = self.df_cleaned['date'].dt.year
-        self.df_cleaned['month'] = self.df_cleaned['date'].dt.month
-        self.df_cleaned['day'] = self.df_cleaned['date'].dt.day
+        self.df_cleaned['month'] = self.df_cleaned['date'].dt.strftime('%Y-%m')
+        self.df_cleaned['day'] = self.df_cleaned['date'].dt.day_name()
 
 
         #TF-IDF 벡터화 수행
