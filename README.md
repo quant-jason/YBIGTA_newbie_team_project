@@ -1,10 +1,22 @@
 # YBIGTA 26기 2조 팀 프로젝트
 
-# **영화 리뷰 데이터 분석 및 전처리**
+# **영화 리뷰 데이터 크롤링, 분석 및 전처리**
 
 ## **1. 데이터 개요**
 
-총 3개의 리뷰 데이터 사이트(`Metacritic`, `Rotten Tomatoes`, `IMDB`)에서 크롤링한 데이터를 분석했습니다. 각 데이터에 대해 EDA(탐색적 데이터 분석), 전처리 및 Feature Engineering(FE)을 수행했으며, 마지막으로 사이트별 텍스트 비교를 통한 토픽 분석을 진행했습니다.
+영화 'The Avengers' 리뷰 데이터를 총 3개의 리뷰 사이트(`Metacritic`, `Rotten Tomatoes`, `IMDB`)에서 크롤링하였고 해당 데이터를 분석했습니다. 각 데이터에 대해 EDA(탐색적 데이터 분석), 전처리 및 Feature Engineering(FE)을 수행했으며, 마지막으로 사이트별 텍스트 비교를 통한 토픽 분석을 진행했습니다.
+
+### **1.1 영화 리뷰 사이트**
+- Metacritic: [https://www.metacritic.com](https://www.metacritic.com)
+- Rotten Tomatoes: [https://www.rottentomatoes.com](https://www.rottentomatoes.com)
+- IMDB: [https://www.imdb.com](https://www.imdb.com)
+
+### **1.2 데이터 형식 및 개수**
+- **Metacritic**: CSV, 843개 데이터
+- **Rotten Tomatoes**: CSV, 1219개 데이터
+- **IMDB**: CSV, 1595개 데이터
+
+총 3,657개의 데이터를 csv 파일로 수집하였습니다.
 
 ---
 
