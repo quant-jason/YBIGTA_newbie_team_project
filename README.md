@@ -19,6 +19,8 @@
 총 3,657개의 데이터를 csv 파일로 수집하였습니다.
 
 
+
+
 ## 크롤링 및 전처리 설치 및 실행 방법
 
 실행방법 - vscode에서 venv가상환경 실행을 기준으로 설명합니다! 
@@ -38,6 +40,8 @@ Vscode powershell 기준 : $env:PYTHONPATH = "설정하고자하는 경로 -> YB
 4. 전처리 파일 실행 
 -현재 파일 위치 변경 : cd "~/review_analysis/preprocessing"
 - 실행 명령어 : python main.py --all
+
+
 
 ---
 
