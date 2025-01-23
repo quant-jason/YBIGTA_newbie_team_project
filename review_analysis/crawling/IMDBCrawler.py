@@ -13,6 +13,12 @@ import pandas as pd
 
 class IMDBCrawler(BaseCrawler):
     def __init__(self, output_dir: str):
+        """
+        IMDBCrawler 클래스 초기화 메서드.
+
+        Args:
+            output_dir (str): 크롤링한 데이터를 저장할 디렉터리 경로.
+        """
         super().__init__(output_dir)
         self.base_url = 'https://m.imdb.com/title/tt0848228/reviews/?ref_=tt_ururv_sm' 
         self.chrome_options = Options()
@@ -23,6 +29,15 @@ class IMDBCrawler(BaseCrawler):
         self.logger.info("IDMB크롤러 로그 정상작동")
 
     def start_browser(self):
+        """
+        웹 브라우저를 시작하고 초기 URL로 이동 및 크롤링 위한 기본 세팅
+
+        Args:
+            None
+
+        Returns:
+            None
+        """
         self.driver.get(self.base_url)
         self.driver.implicitly_wait(2)
 
@@ -97,6 +112,15 @@ class IMDBCrawler(BaseCrawler):
 
         
     def save_to_database(self):
+        """
+        수집된 데이터를 CSV 파일로 저장.
+
+        Args:
+            None
+
+        Returns:
+            None: 저장 경로는 self.dir 경로의 `reviews_IDMB.csv`.
+        """
         file_name = "reviews_IMDB.csv"
         file_path = os.path.join(self.output_dir, file_name)
         if isinstance(self.data, pd.DataFrame):
