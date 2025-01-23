@@ -7,7 +7,7 @@ from datetime import datetime
 from scipy.stats import zscore
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-class IMDB_processor(BaseDataProcessor):
+class IMDBProcessor(BaseDataProcessor):
     def __init__(self, input_path: str, output_path: str):
         super().__init__(input_path, output_path)
         self.df = pd.read_csv(input_path, na_values=["N/A"])
