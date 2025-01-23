@@ -36,7 +36,7 @@
 3. 크롤링 파일 실행
 
 - 현재 파일 위치 변경 : cd "~/review_analysis/crawling"
-- 실행 명령어 : python main.py --all
+- 실행 명령어 : python main.py -o ../../database --all
 
 4. 전처리 파일 실행 -현재 파일 위치 변경 : cd "~/review_analysis/preprocessing"
 
