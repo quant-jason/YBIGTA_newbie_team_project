@@ -12,8 +12,8 @@ from review_analysis.preprocessing.MetaProcessor import MetaProcessor
 # key는 "reviews_사이트이름"으로, value는 해당 처리를 위한 클래스
 PREPROCESS_CLASSES: Dict[str, Type[BaseDataProcessor]] = {
     "reviews_rotten_tomatoes": RTProcessor,
-    "reviews_IMDB.csv": IMDBProcessor,
-    "reviews_metacritic": MetaProcessor,
+    "reviews_IMDB": IMDBProcessor,
+    "reviews_metacritic": MetaProcessor
     # key는 크롤링한 csv파일 이름으로 적어주세요! ex. reviews_naver.csv -> reviews_naver
 }
 

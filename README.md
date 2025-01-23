@@ -89,3 +89,23 @@ http://127.0.0.1:8000
 ![윤희찬 merge](github/merged_quant-jason.png)
 ![임재민 merge](github/merged_jaeminl3.png)
 ![정민지 merge](github/merged_mjxjung.png)
+
+## 크롤링 및 전처리 설치 및 실행 방법
+
+실행방법 - vscode에서 venv가상환경 실행을 기준으로 설명합니다! 
+(windows vscode 기준이므로 Mac/Linux 환경의 경우 명령어가 다를 수 있습니다)
+
+1. 가상환경(venv) 활성화
+- 루트 디렉토리에서 다음 명령어 실행 python -m venv venv
+- 의존성 설치 : pip install -r requirements.txt
+
+2. PYTHONPATH 설정
+Vscode powershell 기준 : $env:PYTHONPATH = "설정하고자하는 경로 -> YBIGTA_newbie_team_project파일을 경로로 설정하시면 됩니다"
+
+3. 크롤링 파일 실행
+- 현재 파일 위치 변경 : cd "~/review_analysis/crawling"
+- 실행 명령어 : python main.py --all
+
+4. 전처리 파일 실행 
+-현재 파일 위치 변경 : cd "~/review_analysis/preprocessing"
+- 실행 명령어 : python main.py --all
