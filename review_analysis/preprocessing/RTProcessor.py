@@ -40,7 +40,7 @@ class RTProcessor(BaseDataProcessor):
         self.df = self.df[self.df['tfidf_features'] != '']
 
     def save_to_database(self):
-        file_name = "preprocessed_reviews_RTC.csv"
+        file_name = "preprocessed_reviews_RT.csv"
         file_path = os.path.join(self.output_path, file_name)
         if isinstance(self.df, pd.DataFrame):
             self.df.to_csv(file_path, index=False, encoding='utf-8-sig')
