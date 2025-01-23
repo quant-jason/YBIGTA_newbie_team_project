@@ -19,7 +19,24 @@ import re
 import os
 
 class MetaCrawler(BaseCrawler):
+    """
+    MetaCrawler 클래스는 Metacritic에서 영화 사용자 리뷰 데이터를 크롤링하는 기능을 가짐.
+
+    Attributes:
+        base_url (str): 크롤링 대상 URL.
+        output_dir (str): 결과 파일이 저장될 디렉토리.
+        chrome_options (Options): 크롬 브라우저 옵션 설정.
+        driver (webdriver.Chrome): Selenium WebDriver 인스턴스.
+        logger (Logger): 로그 기록을 위한 로거.
+        data (Optional[pd.DataFrame]): 크롤링한 데이터를 저장하는 데이터프레임.
+    """
     def __init__(self, output_dir: str):
+        """
+        MetaCrawler 클래스의 초기화 메서드.
+
+        Args:
+            output_dir (str): 결과 파일이 저장될 디렉토리.
+        """
         super().__init__(output_dir)
         self.base_url = 'https://www.metacritic.com/movie/the-avengers-2012/user-reviews'
 
@@ -37,6 +54,9 @@ class MetaCrawler(BaseCrawler):
         self.data: Optional[pd.DataFrame] = None
         
     def start_browser(self):
+        """
+        크롬 브라우저를 실행하고 Metacritic URL로 이동.
+        """
         self.driver.get(self.base_url)
         self.driver.implicitly_wait(2)
         try:
@@ -45,6 +65,14 @@ class MetaCrawler(BaseCrawler):
             pass
 
     def scrape_reviews(self):
+        """
+        사용자 리뷰 데이터를 크롤링하여 메타데이터로 저장.
+
+        Reviews:
+            - date (str): 리뷰 날짜.
+            - review (str): 리뷰 텍스트.
+            - score (str): 리뷰 점수.
+        """
         self.start_browser()
         wait = WebDriverWait(self.driver, 10)
 
@@ -148,6 +176,12 @@ class MetaCrawler(BaseCrawler):
 
     
     def save_to_database(self):
+        """
+        크롤링한 데이터를 CSV 파일로 저장.
+
+        File:
+            - reviews_metacritic.csv: 결과 데이터를 저장하는 파일.
+        """
         file_name = "reviews_metacritic.csv"
         file_path = os.path.join(self.output_dir, file_name)
         if isinstance(self.data, pd.DataFrame):
