@@ -4,7 +4,7 @@ import os
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.stats import zscore
 
-class RTCProcessor(BaseDataProcessor):
+class RTProcessor(BaseDataProcessor):
     def __init__(self, input_path: str, output_path: str):
         super().__init__(input_path, output_path)
         self.input_path = input_path
