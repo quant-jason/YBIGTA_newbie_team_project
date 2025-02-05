@@ -40,11 +40,11 @@ class UserRepository:
             """)
 
         self.db.execute(sql, {"email": user.email, "password": user.password, "username": user.username})
-        self.db.commit()  # 커밋 한 번만 수행
+        self.db.commit()
         return user
 
     def delete_user(self, user: User) -> User:
         sql = text("DELETE FROM users WHERE email = :email")
         self.db.execute(sql, {"email": user.email})
-        self.db.commit()  # 커밋 한 번만 수행
+        self.db.commit()
         return user
