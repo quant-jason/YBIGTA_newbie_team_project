@@ -7,11 +7,11 @@ from dotenv import load_dotenv
 
 load_dotenv()       #MYSQL접속 정보 들어있는 env파일 로드하기
 
-user = os.getenv("DB_USER")
-passwd = os.getenv("DB_PASSWD")
-host = os.getenv("DB_HOST")
-port = os.getenv("DB_PORT")
-db = os.getenv("DB_NAME")
+user = os.getenv("DB_USER", "root")
+passwd = os.getenv("DB_PASSWD", "rootpass")
+host = os.getenv("DB_HOST", "127.0.0.1")
+port = os.getenv("DB_PORT", 3306)
+db = os.getenv("DB_NAME", "mydatabase")
 
 DB_URL = f'mysql+pymysql://{user}:{passwd}@{host}:{port}/{db}?charset=utf8'
 
