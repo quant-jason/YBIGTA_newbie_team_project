@@ -171,3 +171,10 @@ cython_debug/
 .pypirc
 review_analysis/.DS_Store
 review_analysis/crawling/.DS_Store
+
+
+# PEM 키 파일 무시
+*.pem
+*.key
+id_rsa
+id_rsa.pub
