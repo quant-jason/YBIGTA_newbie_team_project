@@ -48,7 +48,6 @@ jobs:
       - name: Check Built Docker Images # test 나중에 지우기
         run: docker images
 
-      
       - name: Build Docker Image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/ybigta-newbie-team-project:latest .
 
@@ -56,9 +55,8 @@ jobs:
         run: docker push ${{ secrets.DOCKER_USERNAME }}/ybigta-newbie-team-project:latest
 
       - name: Push Docker Image to Docker Hub # test 나중에 지우기
-            run: |
-              docker push ${{ secrets.DOCKER_USERNAME }}/ybigta-newbie-team-project:latest
-
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/ybigta-newbie-team-project:latest
 
   # deploy:
   #   name: Deploy to EC2
