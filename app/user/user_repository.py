@@ -8,9 +8,12 @@ from sqlalchemy import text
 class UserRepository:
     def __init__(self, db: Optional[Session] = None):
         """
-        MYSQL 세션 설정, DB가 없다면 SessionLocal
+        MYSQL 세션 설정, DB가 없다면 ValueError 발생
         """
-        self.db = db or SessionLocal()      #db가 없다면 SessionLocal() 실행
+        if db is None:
+            raise ValueError("DB가 없습니다.")
+        
+        self.db = db
 
     def get_user_by_email(self, email: str) -> Optional[User]:
         """
