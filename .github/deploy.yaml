@@ -66,4 +66,4 @@ jobs:
           script: |
             echo "Successfully connected to EC2!"
             docker -v
-            # docker-compose -v
+            # docker compose -v
