@@ -19,22 +19,3 @@ DB_URL = f'mysql+pymysql://{user}:{passwd}@{host}:{port}/{db}?charset=utf8'
 # SQLAlchemy 엔진 및 세션 설정
 engine = create_engine(DB_URL, echo=True)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# 데이터베이스 모델 정의
-Base = declarative_base()
-
-class User(Base):
-    __tablename__ = "users"
-
-    email = Column(String(255), primary_key=True)
-    password = Column(String(255), nullable=False)
-    username = Column(String(255), nullable=False)
-
-# 데이터베이스 테이블 생성
-def init_db():
-    Base.metadata.create_all(bind=engine)
-
-# 스크립트 실행 시 테이블 자동 생성
-if __name__ == "__main__":
-    init_db()
-    print("users 테이블 생성 완료")
