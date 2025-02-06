@@ -1,20 +1,22 @@
 # YBIGTA 26기 2조 팀 프로젝트
 
-## Docker
+## Docker & AWS
 
-**Docker 주소**: [https://hub.docker.com/repository/docker/hyican/ybigta/general]https://hub.docker.com/repository/docker/hyican/ybigta/general
+**Docker 주소**: [https://hub.docker.com/repository/docker/hyican/ybigta/general](https://hub.docker.com/repository/docker/hyican/ybigta/general)
 
 **Api Endpoint success**
 
-1. /login_success
+1. /root
+   ![root_success](./aws/root.png)
+2. /login
    ![login_success](./aws/login.png)
-2. /register_success
+3. /register
    ![register_success](./aws/register.png)
-3. /delete_success
+4. /delete
    ![delete_success](./aws/delete.png)
-4. /update_passoword_success
+5. /update_passoword
    ![update_passoword_success](./aws/update-passoword.png)
-5. /preprocess_success
+6. /preprocess
    ![preprocess_success](./aws/preprocess.png)
 
 **Github Action success**
