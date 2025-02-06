@@ -6,15 +6,17 @@
 
 **Api Endpoint success**
 
-1. /login
+1. /root
+   ![root_success](./aws/root.png)
+2. /login
    ![login_success](./aws/login.png)
-2. /register
+3. /register
    ![register_success](./aws/register.png)
-3. /delete
+4. /delete
    ![delete_success](./aws/delete.png)
-4. /update_passoword
+5. /update_passoword
    ![update_passoword_success](./aws/update-passoword.png)
-5. /preprocess
+6. /preprocess
    ![preprocess_success](./aws/preprocess.png)
 
 **Github Action success**
