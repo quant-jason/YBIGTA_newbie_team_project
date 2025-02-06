@@ -2,8 +2,22 @@
 
 ## Docker
 
-**Docker 주소**: https://hub.docker.com/repository/docker/hyican/myapp/general
+**Docker 주소**: [https://hub.docker.com/repository/docker/hyican/ybigta/general]https://hub.docker.com/repository/docker/hyican/ybigta/general
 
+**Api Endpoint success**
+
+1. /login_success
+   ![login_success](./aws/login.png)
+2. /register_success
+   ![register_success](./aws/register.png)
+3. /delete_success
+   ![delete_success](./aws/delete.png)
+4. /update_passoword_success
+   ![update_passoword_success](./aws/update-passoword.png)
+5. /preprocess_success
+   ![preprocess_success](./aws/preprocess.png)
+
+**Github Action success**
 ![github_action_success](./aws/github_action.png)
 
 ## **영화 리뷰 데이터 크롤링, 분석 및 전처리**
