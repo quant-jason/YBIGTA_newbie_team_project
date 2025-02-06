@@ -7,7 +7,7 @@
 **Api Endpoint success**
 
 1. /root
-   ![root_success](./aws/Root.png)
+   ![root_success](./aws/root.png)
 2. /login
    ![login_success](./aws/login.png)
 3. /register
@@ -15,7 +15,7 @@
 4. /delete
    ![delete_success](./aws/delete.png)
 5. /update_passoword
-   ![update_passoword_success](./aws/update-passoword.png)
+   ![update_password_success](./aws/update-password.png)
 6. /preprocess
    ![preprocess_success](./aws/preprocess.png)
 
