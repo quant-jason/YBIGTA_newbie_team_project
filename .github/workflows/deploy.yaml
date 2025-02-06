@@ -18,7 +18,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Debugging
+      - name: Debuggings
         run: |
           set +x  # Secrets 값 직접 출력 방지
           if [[ -z "${{ secrets.DOCKER_USERNAME }}" ]]; then echo " DOCKER_USERNAME is NOT set"; else echo "DOCKER_USERNAME is set"; fi
