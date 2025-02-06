@@ -68,10 +68,6 @@ jobs:
       #       docker -v
 
       - name: Debug Secrets
-        run: |
-          set +x  # 로그에 출력 방지
-          echo "EC2_HOST is set"
-<<<<<<< HEAD
-=======
-
->>>>>>> fa8944bfbaea0950d9f8b0bc7201351548db7529
+          run: |
+            set +x  # 로그에 출력 방지
+            echo "EC2_HOST is set"
