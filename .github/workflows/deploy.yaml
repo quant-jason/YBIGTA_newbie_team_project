@@ -57,7 +57,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Connect to EC2 via SS
+      - name: Connect to EC2 via SSH
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -66,8 +66,7 @@ jobs:
           script: |
             echo "Successfully connected to EC2!"
             docker -v
-            
-      - name: Debug Secrets
-      run: |
-        echo "EC2_HOST=${{ secrets.EC2_HOST }}"
 
+      - name: Debug Secrets
+        run: |
+          echo "EC2_HOST=${{ secrets.EC2_HOST }}"
