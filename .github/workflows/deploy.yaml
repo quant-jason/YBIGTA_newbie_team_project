@@ -1,13 +1,13 @@
 name: Deploy to EC2
 
 on:
-  # push:
-  #   branches:
-  #     - main # main 브랜치에 풀리퀘 시 실행
-
   push:
     branches:
-      - github_action # 임시 실행
+      - main # main 브랜치에 풀리퀘 시 실행
+
+  # push:
+  #   branches:
+  #     - github_action # 임시 실행
 
 jobs:
   build-and-push:
@@ -57,7 +57,7 @@ jobs:
     needs: build-and-push
 
     steps:
-      - name: Debugging Secrets and Variables
+      - name: Debugging Secrets and Variables # 테스트 코드
         run: |
           set +x  # Secrets 값 직접 출력 방지
           if [[ -z "${{ secrets.EC2_HOST }}" ]]; then echo "EC2_HOST is NOT set"; else echo "EC2_HOST is set"; fi
