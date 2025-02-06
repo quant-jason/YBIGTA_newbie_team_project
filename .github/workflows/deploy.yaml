@@ -84,8 +84,8 @@ jobs:
             sudo docker rm my-app || true
 
             # myapp 지워지면 아래 주석 해제
-            # sudo docker stop ybigta-newbie-team-project || true
-            # sudo docker rm ybigta-newbie-team-project || true
+            sudo docker stop ybigta-newbie-team-project || true
+            sudo docker rm ybigta-newbie-team-project || true
 
             # 최신 Docker 이미지 가져오기
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/ybigta-newbie-team-project:latest
