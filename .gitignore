@@ -178,3 +178,5 @@ review_analysis/crawling/.DS_Store
 *.key
 id_rsa
 id_rsa.pub
+
+.DS_Store

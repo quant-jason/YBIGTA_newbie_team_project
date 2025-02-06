@@ -44,7 +44,9 @@
 name: Test EC2 SSH
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main # main 브랜치에 push할 때 실행
 
 jobs:
   test-ssh:
@@ -52,7 +54,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Connect to EC2 via SSH
+      - name: Connect to EC2 via SS
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
