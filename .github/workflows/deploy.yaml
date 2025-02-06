@@ -75,7 +75,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
             # 기존 컨테이너 중지 및 삭제
-            sudo docker kill mycontainer
+            # sudo docker kill mycontainer
             # # myapp 지워지면 아래 코드 없애기
             # sudo docker stop myapp || true
             # sudo docker rm myapp || true
@@ -84,8 +84,14 @@ jobs:
             # sudo docker rm my-app || true
 
             # myapp 지워지면 아래 주석 해제
-            sudo docker stop ybigta || true
-            sudo docker rm ybigta || true
+            # sudo docker stop ybigta || true
+            # sudo docker rm ybigta || true
+
+            sudo docker stop $(docker ps -aq) || true
+            sudo docker rm $(docker ps -aq) || true
+
+            # ✅ 모든 중지된 컨테이너 삭제 (prune 사용)
+            sudo docker container prune -f
 
             # 최신 Docker 이미지 가져오기
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/ybigta:latest
