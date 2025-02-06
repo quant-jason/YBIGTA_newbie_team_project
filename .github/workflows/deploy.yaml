@@ -69,4 +69,9 @@ jobs:
 
       - name: Debug Secrets
         run: |
-          echo "EC2_HOST=${{ secrets.EC2_HOST }}"
+          set +x  # 로그에 출력 방지
+          echo "EC2_HOST is set"
+<<<<<<< HEAD
+=======
+
+>>>>>>> fa8944bfbaea0950d9f8b0bc7201351548db7529
