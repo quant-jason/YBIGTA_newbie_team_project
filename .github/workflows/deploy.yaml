@@ -1,9 +1,13 @@
 name: Deploy to EC2
 
 on:
-  pull_request:
+  # pull_request:
+  #   branches:
+  #     - main # main 브랜치에 풀리퀘 시 실행
+
+  push:
     branches:
-      - main # main 브랜치에 풀리퀘 시 실행
+      - github_action # 임시 실행
 
 jobs:
   build-and-push:
@@ -13,6 +17,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Debugging
+        run: |
+          set +x  # Secrets 값 직접 출력 방지
+          if [[ -z "${{ secrets.DOCKER_USERNAME }}" ]]; then echo " DOCKER_USERNAME is NOT set"; else echo "DOCKER_USERNAME is set"; fi
+          if [[ -z "${{ secrets.DOCKER_PASSWORD }}" ]]; then echo " DOCKER_PASSWORD is NOT set"; else echo "DOCKER_PASSWORD is set"; fi
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
@@ -29,6 +39,13 @@ jobs:
     needs: build-and-push
 
     steps:
+      - name: Debugging2
+        run: |
+          set +x  #  Secrets 값 직접 출력 방지
+          if [[ -z "${{ secrets.EC2_HOST }}" ]]; then echo " EC2_HOST is NOT set"; else echo "EC2_HOST is set"; fi
+          if [[ -z "${{ secrets.EC2_USER }}" ]]; then echo " EC2_USER is NOT set"; else echo "EC2_USER is set"; fi
+          if [[ -z "${{ secrets.EC2_SSH_PRIVATE_KEY }}" ]]; then echo " EC2_SSH_PRIVATE_KEY is NOT set"; else echo "EC2_SSH_PRIVATE_KEY is set"; fi
+
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
