@@ -27,18 +27,15 @@ jobs:
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Test Docker Hub Connection # test 나중에 지우기
-        run: curl -I https://registry-1.docker.io/v2/library/python/tags/list
-
       - name: Debug Docker Hub # test 나중에 지우기
         run: |
           set +x
           echo "Checking Docker Hub credentials..."
           echo "DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}"
           if [[ -z "${{ secrets.DOCKER_PASSWORD }}" ]]; then
-            echo "❌ DOCKER_PASSWORD is NOT set"
+            echo "DOCKER_PASSWORD is NOT set"
           else
-            echo "✅ DOCKER_PASSWORD is set"
+            echo "DOCKER_PASSWORD is set"
           fi
 
       - name: Verify Docker Login # test 나중에 지우기
@@ -58,15 +55,22 @@ jobs:
     name: Deploy to EC2
     runs-on: ubuntu-latest
     needs: build-and-push
-
+  
     steps:
-      - name: Debugging2 # test 나중에 지우기
+      - name: Debugging Secrets and Variables
         run: |
-          set +x  #  Secrets 값 직접 출력 방지
-          if [[ -z "${{ secrets.EC2_HOST }}" ]]; then echo " EC2_HOST is NOT set"; else echo "EC2_HOST is set"; fi
-          if [[ -z "${{ secrets.EC2_USER }}" ]]; then echo " EC2_USER is NOT set"; else echo "EC2_USER is set"; fi
-          if [[ -z "${{ secrets.EC2_SSH_PRIVATE_KEY }}" ]]; then echo " EC2_SSH_PRIVATE_KEY is NOT set"; else echo "EC2_SSH_PRIVATE_KEY is set"; fi
-
+          set +x  # Secrets 값 직접 출력 방지
+          if [[ -z "${{ secrets.EC2_HOST }}" ]]; then echo "EC2_HOST is NOT set"; else echo "EC2_HOST is set"; fi
+          if [[ -z "${{ secrets.EC2_USER }}" ]]; then echo "EC2_USER is NOT set"; else echo "EC2_USER is set"; fi
+          if [[ -z "${{ secrets.EC2_SSH_PRIVATE_KEY }}" ]]; then echo "EC2_SSH_PRIVATE_KEY is NOT set"; else echo "EC2_SSH_PRIVATE_KEY is set"; fi
+  
+          if [[ -z "${{ secrets.DB_USER }}" ]]; then echo "DB_USER is NOT set"; else echo "DB_USER is set"; fi
+          if [[ -z "${{ secrets.DB_PASSWD }}" ]]; then echo "DB_PASSWD is NOT set"; else echo "DB_PASSWD is set"; fi
+          if [[ -z "${{ secrets.DB_HOST }}" ]]; then echo "DB_HOST is NOT set"; else echo "DB_HOST is set"; fi
+          if [[ -z "${{ secrets.DB_PORT }}" ]]; then echo "DB_PORT is NOT set"; else echo "DB_PORT is set"; fi
+          if [[ -z "${{ secrets.DB_NAME }}" ]]; then echo "DB_NAME is NOT set"; else echo "DB_NAME is set"; fi
+          if [[ -z "${{ secrets.MONGO_URL }}" ]]; then echo "MONGO_URL is NOT set"; else echo "MONGO_URL is set"; fi
+  
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
@@ -74,25 +78,39 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            # 기존 컨테이너 중지 및 삭제
-            sudo docker stop $(docker ps -aq) || true
-            sudo docker rm $(docker ps -aq) || true
-            sudo docker container prune -f
-
+            echo "Deploying to EC2..."
+  
+            # 기존 실행 중인 컨테이너 중지 및 삭제
+            echo "Stopping and removing existing containers..."
+            sudo bash -c 'docker stop $(docker ps -aq) || true'
+            sudo bash -c 'docker rm $(docker ps -aq) || true'
+  
+            # 기존 Docker 이미지 삭제
+            echo "Removing old Docker images..."
+            sudo bash -c 'docker rmi -f $(docker images -q) || true'
+  
+            # Docker 시스템 정리 (불필요한 캐시 삭제)
+            echo "🧹 Cleaning up Docker system..."
+            sudo bash -c 'docker system prune -a -f'
+  
             # 최신 Docker 이미지 가져오기
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/ybigta:latest
-
+            echo "⬇️ Pulling the latest Docker image..."
+            sudo bash -c 'docker pull ${{ secrets.DOCKER_USERNAME }}/ybigta:latest'
+  
             # 새 컨테이너 실행
-            # sudo docker run -d --name ybigta -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/ybigta:latest
-
-            sudo docker run -d --name ybigta -p 8000:8000 \
-              -e DB_USER=${{ secrets.DB_USER }} \
-              -e DB_PASSWD=${{ secrets.DB_PASSWD }} \
-              -e DB_HOST=${{ secrets.DB_HOST }} \
-              -e DB_PORT=${{ secrets.DB_PORT }} \
-              -e DB_NAME=${{ secrets.DB_NAME }} \
-              -e MONGO_URL=${{ secrets.MONGO_URL }} \
-              ${{ secrets.DOCKER_USERNAME }}/ybigta:latest
+            echo "Running the new container..."
+            sudo bash -c '
+              docker run -d --name ybigta -p 8000:8000 \
+                -e DB_USER=${{ secrets.DB_USER }} \
+                -e DB_PASSWD=${{ secrets.DB_PASSWD }} \
+                -e DB_HOST=${{ secrets.DB_HOST }} \
+                -e DB_PORT=${{ secrets.DB_PORT }} \
+                -e DB_NAME=${{ secrets.DB_NAME }} \
+                -e MONGO_URL=${{ secrets.MONGO_URL }} \
+                ${{ secrets.DOCKER_USERNAME }}/ybigta:latest
+            '
+  
+            echo "Deployment completed!"
 
 # name: Test EC2 SSH
 
