@@ -50,10 +50,10 @@ jobs:
           docker pull python:3.9
 
       - name: Build Docker Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/my-app:latest .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/ybigta-newbie-team-project:latest .
 
       - name: Push Docker Image to Docker Hub
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/ybigta-newbie-team-project:latest
 
   deploy:
     name: Deploy to EC2
@@ -76,14 +76,16 @@ jobs:
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
             # 기존 컨테이너 중지 및 삭제
-            sudo docker stop my-app || true
+            sudo docker stop myapp || true
+            sudo docker rm myapp || true
+            sudo docker stop my-pp || true
             sudo docker rm my-app || true
 
             # 최신 Docker 이미지 가져오기
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/ybigta-newbie-team-project:latest
 
             # 새 컨테이너 실행
-            sudo docker run -d --name my-app -p 80:80 ${{ secrets.DOCKER_USERNAME }}/my-app:latest
+            sudo docker run -d --name ybigta-newbie-team-project -p 80:80 ${{ secrets.DOCKER_USERNAME }}/ybigta-newbie-team-project:latest
 
 # name: Test EC2 SSH
 
