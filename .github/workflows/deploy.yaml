@@ -1,13 +1,13 @@
 name: Deploy to EC2
 
 on:
-  push:
-    branches:
-      - main # main 브랜치에 풀리퀘 시 실행
-
   # push:
   #   branches:
-  #     - github_action # 임시 실행
+  #     - main # main 브랜치에 풀리퀘 시 실행
+
+  push:
+    branches:
+      - github_action # 임시 실행
 
 jobs:
   build-and-push:
@@ -45,9 +45,8 @@ jobs:
         run: |
           docker info | grep Username
 
-      - name: Test Docker Image Pull # test 나중에 지우기
-        run: |
-          docker pull python:3.9
+      - name: Check Built Docker Images # test 나중에 지우기
+        run: docker images
 
       - name: Push Docker Image to Docker Hub # test 나중에 지우기
         run: |
