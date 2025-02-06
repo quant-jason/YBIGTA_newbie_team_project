@@ -4,7 +4,7 @@
 
 **Docker 주소**: https://hub.docker.com/repository/docker/hyican/myapp/general
 
-![aws endpoint](./aws/preprocess_needmodify.png)
+![github_action_success](./aws/github_action.png)
 
 ## **영화 리뷰 데이터 크롤링, 분석 및 전처리**
 
