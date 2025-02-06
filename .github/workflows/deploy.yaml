@@ -99,16 +99,21 @@ jobs:
 
           # 새 컨테이너 실행
           echo "Running the new container..."
-          sudo bash -c '
-            docker run -d --name ybigta -p 8000:8000 \
-              -e DB_USER=${{ secrets.DB_USER }} \
-              -e DB_PASSWD=${{ secrets.DB_PASSWD }} \
-              -e DB_HOST=${{ secrets.DB_HOST }} \
-              -e DB_PORT=${{ secrets.DB_PORT }} \
-              -e DB_NAME=${{ secrets.DB_NAME }} \
-              -e MONGO_URL=${{ secrets.MONGO_URL }} \
-              ${{ secrets.DOCKER_USERNAME }}/ybigta:latest
-          '
+          # sudo bash -c '
+          #   docker run -d --name ybigta -p 8000:8000 \
+          #     -e DB_USER=${{ secrets.DB_USER }} \
+          #     -e DB_PASSWD=${{ secrets.DB_PASSWD }} \
+          #     -e DB_HOST=${{ secrets.DB_HOST }} \
+          #     -e DB_PORT=${{ secrets.DB_PORT }} \
+          #     -e DB_NAME=${{ secrets.DB_NAME }} \
+          #     -e MONGO_URL=${{ secrets.MONGO_URL }} \
+          #     ${{ secrets.DOCKER_USERNAME }}/ybigta:latest
+          # '
+
+          # sudo bash -c 'docker run -d --name ybigta -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/ybigta:latest'
+
+          sudo docker run -d -p 8000:8000 --name ybigta --env-file .env hyican/ybigta:latest
+
 
           echo "Deployment completed!"
 
