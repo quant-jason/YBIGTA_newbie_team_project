@@ -1,17 +1,17 @@
 from fastapi import APIRouter, HTTPException
 from database.mongodb_connection import mongo_db  # MongoDB 연결 가져오기
-from review_analysis.preprocessing.IMDBProcessor import IMDBProcessor
-from review_analysis.preprocessing.RTProcessor import RTProcessor
-from review_analysis.preprocessing.MetaProcessor import MetaProcessor
+from review_analysis.preprocessing.IMDBProcessor import DataFrameProcessor
+from review_analysis.preprocessing.RTProcessor import DataFrameProcessor
+from review_analysis.preprocessing.MetaProcessor import DataFrameProcessor
 import pandas as pd  # 🚀 MongoDB 데이터를 DataFrame으로 변환하기 위해 추가
 
 router = APIRouter()
 
 # 사이트별 전처리 클래스 매핑
 PREPROCESS_CLASSES = {
-    "IMDB": IMDBProcessor,
-    "RottenTomato": RTProcessor,  
-    "Metacritic": MetaProcessor
+    "IMDB": DataFrameProcessor,
+    "RottenTomato": DataFrameProcessor,
+    "Metacritic": DataFrameProcessor
 }
 
 @router.post("/review/preprocess/{site_name}")
@@ -41,14 +41,20 @@ def preprocess_reviews(site_name: str):
     preprocessor_class = PREPROCESS_CLASSES[site_name]
     
     # 전처리 클래스 인스턴스 생성 (MongoDB 데이터를 직접 전달)
-    preprocessor = preprocessor_class(df, output_path=None)  # ✅ `input_path` 없이 직접 DataFrame 전달
+    preprocessor = preprocessor_class(df)  
 
     # 데이터 전처리 실행
     preprocessor.preprocess()
     preprocessor.feature_engineering()
+    
+    # 전처리된 데이터프레임 가져오기
+    df_cleaned = preprocessor.get_cleaned_dataframe()
 
-    # MongoDB 업데이트
-    for _, row in preprocessor.df_cleaned.iterrows():
-        collection.update_one({"_id": row["_id"]}, {"$set": row.to_dict()})
+    # 기존 데이터 삭제 (특정 사이트에 대한 리뷰 데이터 삭제)
+    collection.delete_many({})  # 전체 데이터를 삭제합니다. 필요한 경우 조건을 추가할 수 있습니다.
 
-    return {"message": f"{site_name} 리뷰 전처리 완료", "processed_count": len(preprocessor.df_cleaned)}
+    # 전처리된 데이터 저장 (MongoDB에 삽입)
+    # `_id`를 새로 생성하지 않고, DataFrame의 `_id`를 그대로 사용하려면 다음과 같이 `to_dict()`로 변환
+    collection.insert_many(df_cleaned.to_dict(orient='records'))  # 새로운 데이터 삽입
+
+    return {"message": f"Successfully processed and updated reviews for {site_name}."}
