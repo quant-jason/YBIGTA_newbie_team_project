@@ -46,7 +46,10 @@ name: Test EC2 SSH
 on:
   push:
     branches:
-      - main # main 브랜치에 push할 때 실행
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
   test-ssh:
