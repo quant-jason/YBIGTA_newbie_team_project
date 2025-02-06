@@ -113,8 +113,6 @@ jobs:
           # sudo bash -c 'docker run -d --name ybigta -p 8000:8000 ${{ secrets.DOCKER_USERNAME }}/ybigta:latest'
 
           sudo docker run -d -p 8000:8000 --name ybigta --env-file .env hyican/ybigta:latest
-
-
           echo "Deployment completed!"
 
 # name: Test EC2 SSH
