@@ -75,11 +75,17 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
           script: |
-            # 기존 컨테이너 중지 및 삭제
+            # 기존 컨테이너 중지 및 삭제 
+            # myapp 지워지면 아래 코드 없애기
             sudo docker stop myapp || true
             sudo docker rm myapp || true
-            sudo docker stop my-pp || true
+
+            sudo docker stop my-app || true
             sudo docker rm my-app || true
+
+            # myapp 지워지면 아래 주석 해제
+            # sudo docker stop ybigta-newbie-team-project || true
+            # sudo docker rm ybigta-newbie-team-project || true
 
             # 최신 Docker 이미지 가져오기
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/ybigta-newbie-team-project:latest
