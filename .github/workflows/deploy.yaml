@@ -42,21 +42,21 @@ jobs:
       - name: Debugging2
         run: |
           set +x  #  Secrets 값 직접 출력 방지
-          if [[ -z "${{ mysecret.EC2_HOST }}" ]]; then echo " EC2_HOST is NOT set"; else echo "EC2_HOST is set"; fi
-          if [[ -z "${{ mysecret.EC2_USER }}" ]]; then echo " EC2_USER is NOT set"; else echo "EC2_USER is set"; fi
-          if [[ -z "${{ mysecret.EC2_SSH_PRIVATE_KEY }}" ]]; then echo " EC2_SSH_PRIVATE_KEY is NOT set"; else echo "EC2_SSH_PRIVATE_KEY is set"; fi
+          if [[ -z "${{ MySecret.EC2_HOST }}" ]]; then echo " EC2_HOST is NOT set"; else echo "EC2_HOST is set"; fi
+          if [[ -z "${{ MySecret.EC2_USER }}" ]]; then echo " EC2_USER is NOT set"; else echo "EC2_USER is set"; fi
+          if [[ -z "${{ MySecret.EC2_SSH_PRIVATE_KEY }}" ]]; then echo " EC2_SSH_PRIVATE_KEY is NOT set"; else echo "EC2_SSH_PRIVATE_KEY is set"; fi
 
       - name: Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ mysecret.EC2_HOST }}
-          username: ${{ mysecret.EC2_USER }}
-          key: ${{ mysecret.EC2_SSH_PRIVATE_KEY }}
+          host: ${{ MySecret.EC2_HOST }}
+          username: ${{ MySecret.EC2_USER }}
+          key: ${{ MySecret.EC2_SSH_PRIVATE_KEY }}
           script: |
             docker stop my-app || true
             docker rm my-app || true
-            docker pull ${{ mysecret.DOCKER_USERNAME }}/my-app:latest
-            docker run -d --name my-app -p 80:80 ${{ mysecret.DOCKER_USERNAME }}/my-app:latest
+            docker pull ${{ MySecret.DOCKER_USERNAME }}/my-app:latest
+            docker run -d --name my-app -p 80:80 ${{ MySecret.DOCKER_USERNAME }}/my-app:latest
 
 # name: Test EC2 SSH
 
