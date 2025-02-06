@@ -7,7 +7,7 @@
 **Api Endpoint success**
 
 1. /root
-   ![root_success](./aws/root.png)
+   ![root_success](./aws/Root.png)
 2. /login
    ![login_success](./aws/login.png)
 3. /register
