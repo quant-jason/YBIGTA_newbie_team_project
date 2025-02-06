@@ -1,13 +1,13 @@
 name: Deploy to EC2
 
 on:
-  # pull_request:
-  #   branches:
-  #     - main # main 브랜치에 풀리퀘 시 실행
-
   push:
     branches:
-      - github_action # 임시 실행
+      - main # main 브랜치에 풀리퀘 시 실행
+
+  # push:
+  #   branches:
+  #     - github_action # 임시 실행
 
 jobs:
   build-and-push:
@@ -26,6 +26,17 @@ jobs:
 
       - name: Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Debug Docker Hub Credentials
+        run: |
+          set +x
+          echo "Checking Docker Hub credentials..."
+          echo "DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}"
+          if [[ -z "${{ secrets.DOCKER_PASSWORD }}" ]]; then
+            echo "❌ DOCKER_PASSWORD is NOT set"
+          else
+            echo "✅ DOCKER_PASSWORD is set"
+          fi
 
       - name: Build Docker Image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/my-app:latest .
