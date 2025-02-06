@@ -14,7 +14,7 @@
    ![register_success](./aws/register.png)
 4. /delete
    ![delete_success](./aws/delete.png)
-5. /update_passoword
+5. /update_password
    ![update_password_success](./aws/update-password.png)
 6. /preprocess
    ![preprocess_success](./aws/preprocess.png)
